@@ -5,10 +5,10 @@
 // }
 
 // Koneksi DB
-$host = 'localhost';
-$user = 'root';
-$password = '';
-$dbname = 'iotaja';
+$host = 'telkomambis.com';
+$user = 'telkomam_iotaja';
+$password = 'iotaja420##';
+$dbname = 'telkomam_iotaja';
 
 $conn = new mysqli($host, $user, $password, $dbname);
 if ($conn->connect_error) {
