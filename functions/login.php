@@ -27,7 +27,7 @@ include 'csrf.php';
 
     <div class="login-wrapper">
         <div class="login-box">
-            <h3 class="text-center mb-4 fw-bold">IoT Ajaa</h3>
+            <h3 class="text-center mb-4 fw-bold">IoT Ajaaaa</h3>
 
             <?php if (isset($_SESSION['error'])): ?>
                 <div class="alert alert-danger">
