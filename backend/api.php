@@ -1,13 +1,9 @@
 <?php
 header('Content-Type: application/json');
-
-// Set zona waktu ke WIB
 date_default_timezone_set("Asia/Jakarta");
 
-// Lokasi file penyimpanan data
 $data_file = 'data.json';
 
-// Jika POST, simpan data dari ESP32
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
 
@@ -15,31 +11,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $kelembaban = intval($input['kelembaban']);
         $timestamp = date("Y-m-d H:i:s");
 
-        // Format data yang akan disimpan
-        $data = [
+        $newData = [
             'kelembaban' => $kelembaban,
             'timestamp' => $timestamp
         ];
 
-        // Simpan ke file JSON
-        file_put_contents($data_file, json_encode($data, JSON_PRETTY_PRINT));
+        // Ambil data lama (jika ada)
+        $allData = [];
+        if (file_exists($data_file)) {
+            $existing = file_get_contents($data_file);
+            $allData = json_decode($existing, true);
+        }
 
-        echo json_encode(['status' => 'success', 'message' => 'Data disimpan.']);
+        // Tambah data baru ke array
+        $allData[] = $newData;
+
+        // Simpan kembali ke file JSON
+        file_put_contents($data_file, json_encode($allData, JSON_PRETTY_PRINT));
+
+        echo json_encode(['status' => 'success', 'message' => 'Data ditambahkan.']);
     } else {
         http_response_code(400);
         echo json_encode(['status' => 'error', 'message' => 'Data kelembaban tidak ditemukan.']);
     }
-}
-// Jika GET, tampilkan data terakhir
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (file_exists($data_file)) {
         $data = file_get_contents($data_file);
         echo $data;
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Belum ada data.']);
+        echo json_encode([]);
     }
+
 } else {
-    http_response_code(405); // Method Not Allowed
+    http_response_code(405);
     echo json_encode(['status' => 'error', 'message' => 'Metode tidak diizinkan.']);
 }
 ?>
