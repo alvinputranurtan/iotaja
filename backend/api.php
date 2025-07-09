@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
+// Set zona waktu ke WIB
+date_default_timezone_set("Asia/Jakarta");
+
 // Lokasi file penyimpanan data
 $data_file = 'data.json';
 
