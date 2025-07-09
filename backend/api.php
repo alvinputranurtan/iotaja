@@ -16,17 +16,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'timestamp' => $timestamp
         ];
 
-        // Ambil data lama (jika ada)
+        // Ambil data lama dan pastikan bentuk array
         $allData = [];
         if (file_exists($data_file)) {
             $existing = file_get_contents($data_file);
-            $allData = json_decode($existing, true);
+            $decoded = json_decode($existing, true);
+            if (is_array($decoded)) {
+                $allData = $decoded;
+            }
         }
 
         // Tambah data baru ke array
         $allData[] = $newData;
 
-        // Simpan kembali ke file JSON
+        // Simpan ke file
         file_put_contents($data_file, json_encode($allData, JSON_PRETTY_PRINT));
 
         echo json_encode(['status' => 'success', 'message' => 'Data ditambahkan.']);
@@ -47,4 +50,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(405);
     echo json_encode(['status' => 'error', 'message' => 'Metode tidak diizinkan.']);
 }
-?>
